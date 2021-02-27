@@ -6,6 +6,7 @@ using OpenTracing;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dotnet.Onion.Template.Domain;
 
 /*
  * Application service is that layer which initializes and oversees interaction 
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Dotnet.Onion.Template.Application.Services
 {
-    public class TaskService : ITaskService
+    public class TaskService : BaseService, ITaskService
     {
         private readonly ITaskRepository _taskRepository;
         private readonly ITaskFactory _taskFactory;
@@ -28,7 +29,7 @@ namespace Dotnet.Onion.Template.Application.Services
         private readonly ITracer _tracer;
         private readonly IMediator _mediator;
 
-        public TaskService(ITaskRepository taskRepository, TaskViewModelMapper taskViewModelMapper, ITracer tracer, ITaskFactory taskFactory, IMediator mediator)
+        public TaskService(INotifier notifier, ITaskRepository taskRepository, TaskViewModelMapper taskViewModelMapper, ITracer tracer, ITaskFactory taskFactory, IMediator mediator) : base(notifier)
         {
             _taskRepository = taskRepository;
             _taskViewModelMapper = taskViewModelMapper;
@@ -77,5 +78,8 @@ namespace Dotnet.Onion.Template.Application.Services
                 return _taskViewModelMapper.ConstructFromEntity(taskEntity);
             }
         }
+
+       
+
     }
 }

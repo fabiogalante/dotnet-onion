@@ -2,23 +2,29 @@
 using System.Threading.Tasks;
 using Dotnet.Onion.Template.Application.Services;
 using Dotnet.Onion.Template.Application.ViewModels;
+using Dotnet.Onion.Template.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
+using Microsoft.Extensions.Logging;
+
 
 namespace Dotnet.Onion.Template.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TasksController : ControllerBase
+
+    [Produces("application/json")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class TasksController : MainController
     {
         private readonly ITaskService _taskService;
+        private readonly ILogger<TasksController> _logger;
 
-
-        public TasksController(ITaskService taskService)
+        public TasksController(INotifier notifier, ITaskService taskService, ILogger<TasksController> logger) : base(notifier)
         {
-            _taskService = taskService;            
+            _taskService = taskService;
+            _logger = logger;
         }
+
 
         /// <summary>
         /// Get Tasks
@@ -34,7 +40,7 @@ namespace Dotnet.Onion.Template.API.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error($"Error: message: {ex.Message} ");
+                _logger.LogError($"Error: message: {ex.Message} ");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new { exception_message = ex.Message });
             }
@@ -55,7 +61,7 @@ namespace Dotnet.Onion.Template.API.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error($"Error: message: {ex.Message} ");
+                _logger.LogError($"Error: message: {ex.Message} ");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new { exception_message = ex.Message });
             }
@@ -76,7 +82,7 @@ namespace Dotnet.Onion.Template.API.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error($"Error: message: {ex.Message} ");
+                _logger.LogError($"Error: message: {ex.Message} ");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new { exception_message = ex.Message });
             }
@@ -99,10 +105,11 @@ namespace Dotnet.Onion.Template.API.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error($"Error: message: {ex.Message} ");
-
+                _logger.LogError($"Error: message: {ex.Message} ");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { exception_message = ex.Message });
             }
         }
+
+       
     }
 }

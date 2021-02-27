@@ -13,6 +13,7 @@ using OpenTracing.Mock;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Dotnet.Onion.Template.Domain;
 using Xunit;
 
 namespace Dotnet.Onion.Template.Tests.UnitTests.Application.Services
@@ -23,9 +24,10 @@ namespace Dotnet.Onion.Template.Tests.UnitTests.Application.Services
         private readonly Mock<ITaskFactory> _mockTaskFactory = new Mock<ITaskFactory>();
         private readonly Mock<ITracer> _mockITracer = new Mock<ITracer>();
         private readonly Mock<IMediator> _mockIMediator = new Mock<IMediator>();
-        private static readonly Mock<IHttpContextAccessor> _mockIHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        private readonly Mock<INotifier> _mockInotifier = new Mock<INotifier>();
+        private static readonly Mock<IHttpContextAccessor> MockIHttpContextAccessor = new Mock<IHttpContextAccessor>();
 
-        private readonly TaskViewModelMapper _mockTaskViewModelMapper = new TaskViewModelMapper(_mockIHttpContextAccessor.Object);
+        private readonly TaskViewModelMapper _mockTaskViewModelMapper = new TaskViewModelMapper(MockIHttpContextAccessor.Object);
 
         [Fact]
         public async System.Threading.Tasks.Task Create_Success()
@@ -34,11 +36,11 @@ namespace Dotnet.Onion.Template.Tests.UnitTests.Application.Services
             _mockITracer.Setup(x => x.BuildSpan(It.IsAny<string>())).Returns(() => new MockSpanBuilder(new MockTracer(), ""));
             _mockIMediator.Setup(x => x.SendAsync<Task>(It.IsAny<CreateNewTaskCommand>(), null))
                 .Returns(System.Threading.Tasks.Task.FromResult(TaskHelper.GetTask()));
-            _mockIHttpContextAccessor.Setup(x => x.HttpContext).Returns(HttpContextHelper.GetHttpContext());
+            MockIHttpContextAccessor.Setup(x => x.HttpContext).Returns(HttpContextHelper.GetHttpContext());
 
             //Act
 
-            var taskService = new TaskService(_mockTaskRepository.Object, _mockTaskViewModelMapper, _mockITracer.Object, _mockTaskFactory.Object, _mockIMediator.Object);
+            var taskService = new TaskService(_mockInotifier.Object, _mockTaskRepository.Object, _mockTaskViewModelMapper, _mockITracer.Object, _mockTaskFactory.Object, _mockIMediator.Object);
             var result = await taskService.Create(TaskViewModelHelper.GetTaskViewModel());
 
             //Assert
@@ -46,10 +48,8 @@ namespace Dotnet.Onion.Template.Tests.UnitTests.Application.Services
 
             Assert.Equal("Summary", result.Summary);
             Assert.Equal("Description", result.Description);
-            Assert.Equal("tasks", result.Type);
-
+            
             Assert.NotNull(result.Id);
-            Assert.NotNull(result.Links);
 
             _mockITracer.Verify(x => x.BuildSpan(It.IsAny<string>()), Times.Once);
             _mockIMediator.Verify(x => x.SendAsync<Task>(It.IsAny<CreateNewTaskCommand>(), null), Times.Once);

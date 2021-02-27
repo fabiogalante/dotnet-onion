@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using Dotnet.Onion.Template.API.Configuration;
 using Dotnet.Onion.Template.API.Extensions.Middleware;
 using Dotnet.Onion.Template.Application.Handlers;
 using Dotnet.Onion.Template.Application.Mappers;
-using Dotnet.Onion.Template.Application.Services;
 using Dotnet.Onion.Template.Domain.Tasks;
 using Dotnet.Onion.Template.Domain.Tasks.Commands;
 using Dotnet.Onion.Template.Domain.Tasks.Events;
@@ -22,12 +18,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using OpenTracing;
 using OpenTracing.Util;
-using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 
 namespace Dotnet.Onion.Template.API
 {
@@ -45,7 +37,7 @@ namespace Dotnet.Onion.Template.API
         {
             services.AddControllers();
 
-            services.AddScoped<ITaskService, TaskService>();
+            
             services.AddTransient<ITaskRepository, TaskRepository>(); //just as an example, you may use it as .AddScoped
             services.AddSingleton<TaskViewModelMapper>();
             services.AddTransient<ITaskFactory, EntityFactory>();
@@ -86,7 +78,8 @@ namespace Dotnet.Onion.Template.API
                 return tracer;
             });
 
-            Log.Logger = new LoggerConfiguration().CreateLogger();
+
+            services.ResolveDependencies();
 
             services.AddOpenTracing();
 
@@ -95,6 +88,18 @@ namespace Dotnet.Onion.Template.API
             services.AddMvc();
 
             services.AddSwaggerGen();
+
+            #region Logging
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+                loggingBuilder.AddLog4Net();
+            });
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
