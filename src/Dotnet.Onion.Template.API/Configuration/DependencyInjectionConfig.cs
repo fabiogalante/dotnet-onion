@@ -1,21 +1,20 @@
 ﻿using Dotnet.Onion.Template.Application;
 using Dotnet.Onion.Template.Domain;
+using Dotnet.Onion.Template.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using WmsPicking.Api.Configuration;
 
 namespace Dotnet.Onion.Template.API.Configuration
 {
     public static class DependencyInjectionConfig
     {
-        public static IServiceCollection ResolveDependencies(this IServiceCollection services)
+        public static IServiceCollection ResolveDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<INotifier, Notifier>();
 
-            services.RegisterService();
+            services.RegisterApplication();
             
-            services.RegisterRepository();
+            services.RegisterRepository(configuration.GetConnectionString("AuxConnection"),configuration);
 
             return services;
         }

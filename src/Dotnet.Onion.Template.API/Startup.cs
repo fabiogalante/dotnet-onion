@@ -1,16 +1,11 @@
 using System.Reflection;
+using AutoMapper;
 using Dotnet.Onion.Template.API.Configuration;
 using Dotnet.Onion.Template.API.Extensions.Middleware;
-using Dotnet.Onion.Template.Application.Handlers;
-using Dotnet.Onion.Template.Application.Mappers;
-using Dotnet.Onion.Template.Domain.Tasks;
-using Dotnet.Onion.Template.Domain.Tasks.Commands;
-using Dotnet.Onion.Template.Domain.Tasks.Events;
-using Dotnet.Onion.Template.Infrastructure.Factories;
-using Dotnet.Onion.Template.Infrastructure.Repositories;
-using FluentMediator;
+using Dotnet.Onion.Template.Repository;
 using Jaeger;
 using Jaeger.Samplers;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,28 +32,9 @@ namespace Dotnet.Onion.Template.API
         {
             services.AddControllers();
 
-            
-            services.AddTransient<ITaskRepository, TaskRepository>(); //just as an example, you may use it as .AddScoped
-            services.AddSingleton<TaskViewModelMapper>();
-            services.AddTransient<ITaskFactory, EntityFactory>();
-
-            
-
-            services.AddScoped<TaskCommandHandler>();
-            services.AddScoped<TaskEventHandler>();
+            services.AddApiConfig();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.AddFluentMediator(builder =>
-            {
-                builder.On<CreateNewTaskCommand>().PipelineAsync().Return<Domain.Tasks.Task, TaskCommandHandler>((handler, request) => handler.HandleNewTask(request));
-
-                builder.On<TaskCreatedEvent>().PipelineAsync().Call<TaskEventHandler>((handler, request) => handler.HandleTaskCreatedEvent(request));
-
-                builder.On<DeleteTaskCommand>().PipelineAsync().Call<TaskCommandHandler>((handler, request) => handler.HandleDeleteTask(request));
-
-                builder.On<TaskDeletedEvent>().PipelineAsync().Call<TaskEventHandler>((handler, request) => handler.HandleTaskDeletedEvent(request));
-            });
 
             services.AddSingleton(serviceProvider =>
             {
@@ -79,13 +55,18 @@ namespace Dotnet.Onion.Template.API
             });
 
 
-            services.ResolveDependencies();
+            services.ResolveDependencies(Configuration);
 
             services.AddOpenTracing();
 
             services.AddOptions();
 
             services.AddMvc();
+
+            //services.AddMediatR(typeof(Startup));
+
+            services.AddAutoMapper(typeof(Startup).Assembly,
+                typeof(Application.ConfigurationModule).Assembly);
 
             services.AddSwaggerGen();
 
@@ -110,6 +91,7 @@ namespace Dotnet.Onion.Template.API
                 app.UseDeveloperExceptionPage();
             }
 
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();

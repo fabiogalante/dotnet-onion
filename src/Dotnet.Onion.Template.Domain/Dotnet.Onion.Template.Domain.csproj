@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dotnet.Onion.Templante.Crosscutting\Dotnet.Onion.Template.Crosscutting.csproj" />
+    <ProjectReference Include="..\Dotnet.Onion.Template.Infrastructure\Dotnet.Onion.Template.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

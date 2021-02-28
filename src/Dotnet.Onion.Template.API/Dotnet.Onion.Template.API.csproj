@@ -27,37 +27,38 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.3" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.2" />
-		<PackageReference Include="FluentMediator" Version="0.4.7" />
-		<PackageReference Include="FluentMediator.Microsoft.Extensions.DependencyInjection" Version="0.4.7" />
-		<PackageReference Include="Jaeger" Version="0.4.2" />
+		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.2" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.1" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.1" />
+		<PackageReference Include="Jaeger" Version="0.4.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
 		<PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.7.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="5.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="5.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
-		<PackageReference Include="Refit.HttpClientFactory" Version="5.2.4" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="6.0.24" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-		<PackageReference Include="Refit" Version="5.2.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />
+		<PackageReference Include="Refit" Version="6.0.24" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="MediatR" Version="9.0.0" />
 	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dotnet.Onion.Template.Application\Dotnet.Onion.Template.Application.csproj" />
     <ProjectReference Include="..\Dotnet.Onion.Template.Domain\Dotnet.Onion.Template.Domain.csproj" />
     <ProjectReference Include="..\Dotnet.Onion.Template.Infrastructure\Dotnet.Onion.Template.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dotnet.Onion.Template.Repository\Dotnet.Onion.Template.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

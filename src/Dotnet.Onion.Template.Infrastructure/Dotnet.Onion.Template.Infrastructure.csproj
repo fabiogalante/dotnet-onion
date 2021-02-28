@@ -1,12 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.35" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+		<PackageReference Include="MongoDB.Driver" Version="2.11.4" />
+		<PackageReference Include="Polly" Version="7.2.1" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dotnet.Onion.Template.Domain\Dotnet.Onion.Template.Domain.csproj"/>
+    <ProjectReference Include="..\Dotnet.Onion.Templante.Crosscutting\Dotnet.Onion.Template.Crosscutting.csproj" />
   </ItemGroup>
 
 </Project>
