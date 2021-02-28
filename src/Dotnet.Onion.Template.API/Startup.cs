@@ -54,6 +54,11 @@ namespace Dotnet.Onion.Template.API
                 return tracer;
             });
 
+            // Redis Configuration
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetValue<string>("CacheSettings:ConnectionString");
+            });
 
             services.ResolveDependencies(Configuration);
 

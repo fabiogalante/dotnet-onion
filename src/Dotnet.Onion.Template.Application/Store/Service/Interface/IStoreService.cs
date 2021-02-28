@@ -7,5 +7,6 @@ namespace Dotnet.Onion.Template.Application.Store.Service.Interface
     public interface IStoreService
     {
         Task<StoreOutPutDto> GetById(int id);
+        Task<IEnumerable<StoreOutPutDto>> FindAll();
     }
 }

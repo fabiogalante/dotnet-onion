@@ -30,7 +30,7 @@ namespace Dotnet.Onion.Template.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("companies")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompanyResponse))]
@@ -43,7 +43,7 @@ namespace Dotnet.Onion.Template.API.Controllers
             return CustomResponse(result);
         }
 
-        [HttpPost("companies")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]

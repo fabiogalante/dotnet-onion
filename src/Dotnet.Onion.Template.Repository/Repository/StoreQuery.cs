@@ -8,5 +8,11 @@
                      ,GroupName
               FROM Stores
               WHERE StoreId = @id";
+
+        public static string FindAll() =>
+            @"SELECT StoreId
+                     ,StoreName
+                     ,GroupName
+              FROM Stores";
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Dotnet.Onion.Template.API.ViewModel.Store.Response;
 using Dotnet.Onion.Template.Application.Store.Service.Interface;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Dotnet.Onion.Template.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace Dotnet.Onion.Template.API.Controllers
@@ -19,6 +21,7 @@ namespace Dotnet.Onion.Template.API.Controllers
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IStoreService _storeService;
+        private readonly IDistributedCache _redisCache;
 
         public StoresController(INotifier notifier, ILogger<StoresController> logger, IMapper mapper, IMediator mediator, IStoreService storeService) : base(notifier)
         {
@@ -41,6 +44,16 @@ namespace Dotnet.Onion.Template.API.Controllers
             NotifyError("Invalid Id");
             return CustomResponse();
 
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StoreResponse>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Stores()
+        {
+            var stores = await _storeService.FindAll();
+            var result = _mapper.Map<IEnumerable<StoreResponse>>(stores);
+            return CustomResponse(result);
         }
 
 

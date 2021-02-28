@@ -1,4 +1,5 @@
-﻿using Dotnet.Onion.Template.API.ViewModel.Store.Response;
+﻿using System.Collections.Generic;
+using Dotnet.Onion.Template.API.ViewModel.Store.Response;
 using Dotnet.Onion.Template.Application.Store.Dto;
 
 namespace Dotnet.Onion.Template.API.ViewModel.Store.Profile
@@ -8,6 +9,7 @@ namespace Dotnet.Onion.Template.API.ViewModel.Store.Profile
         public StoreProfile()
         {
             CreateMap<StoreOutPutDto, StoreResponse>();
+            
             CreateMap<Domain.Store.Store, StoreOutPutDto>();
         }
     }
