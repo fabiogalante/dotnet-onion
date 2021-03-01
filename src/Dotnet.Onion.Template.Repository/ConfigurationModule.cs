@@ -10,11 +10,17 @@ namespace Dotnet.Onion.Template.Repository
 {
     public static class ConfigurationModule
     {
-        public static void RegisterRepository(this IServiceCollection services, string connectionString, IConfiguration configuration)
+        public static void RegisterRepository(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ContextApp>(c =>
             {
-                c.UseSqlServer(connectionString);
+                c.UseSqlServer(configuration.GetConnectionString("AuxConnection"));
+            });
+
+            // Redis Configuration
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetValue<string>("CacheSettings:ConnectionString");
             });
 
             services.AddScoped(typeof(UnitOfWork<>));

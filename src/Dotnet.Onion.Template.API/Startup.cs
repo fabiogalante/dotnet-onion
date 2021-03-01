@@ -2,10 +2,10 @@ using System.Reflection;
 using AutoMapper;
 using Dotnet.Onion.Template.API.Configuration;
 using Dotnet.Onion.Template.API.Extensions.Middleware;
-using Dotnet.Onion.Template.Repository;
+using Dotnet.Onion.Template.Helpers.HttpClient.Configuration;
+using Dotnet.Onion.Template.Helpers.HttpClient.Extensions;
 using Jaeger;
 using Jaeger.Samplers;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -54,11 +54,11 @@ namespace Dotnet.Onion.Template.API
                 return tracer;
             });
 
-            // Redis Configuration
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = Configuration.GetValue<string>("CacheSettings:ConnectionString");
-            });
+            #region HttpClient
+
+            services.AddHttpClient(Configuration);
+            services.Configure<ServiceLayerOptions>(Configuration.GetSection("ApiSettings"));
+            #endregion
 
             services.ResolveDependencies(Configuration);
 
@@ -68,12 +68,25 @@ namespace Dotnet.Onion.Template.API
 
             services.AddMvc();
 
-            //services.AddMediatR(typeof(Startup));
+            services.AddApiSettingsConfig(Configuration);
+
 
             services.AddAutoMapper(typeof(Startup).Assembly,
                 typeof(Application.ConfigurationModule).Assembly);
 
             services.AddSwaggerGen();
+
+            #region Serialização
+
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+            });
+
+            #endregion
+
+          
+
 
             #region Logging
 

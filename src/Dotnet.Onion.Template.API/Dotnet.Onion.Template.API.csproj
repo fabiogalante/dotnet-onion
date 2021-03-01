@@ -56,14 +56,17 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\helpers\Dotnet.Onion.Template.Helpers.HttpClient\Dotnet.Onion.Template.Helpers.HttpClient.csproj" />
     <ProjectReference Include="..\Dotnet.Onion.Template.Application\Dotnet.Onion.Template.Application.csproj" />
     <ProjectReference Include="..\Dotnet.Onion.Template.Domain\Dotnet.Onion.Template.Domain.csproj" />
     <ProjectReference Include="..\Dotnet.Onion.Template.Infrastructure\Dotnet.Onion.Template.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dotnet.Onion.Template.Repository.Integration.Http\Dotnet.Onion.Template.Integration.Http.csproj" />
     <ProjectReference Include="..\Dotnet.Onion.Template.Repository\Dotnet.Onion.Template.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Bindings\" />
+    <Folder Include="ViewModel\BusinessPartners\Request\" />
   </ItemGroup>
 
 

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Company\Profile\" />
+    <Folder Include="BusinessPartner\Handler\" />
   </ItemGroup>
 
 </Project>
