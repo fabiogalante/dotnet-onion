@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Dotnet.Onion.Template.Helpers.HttpClient.Configuration;
 using Dotnet.Onion.Template.Helpers.HttpClient.Interfaces;
 using Dotnet.Onion.Template.Helpers.HttpClient.Login;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -21,20 +18,17 @@ namespace Dotnet.Onion.Template.Helpers.HttpClient
         private string _cookie = "B1SESSION";
         private readonly string _serviceLayerUrl;
         private readonly string _companyDb;
-        private readonly IDistributedCache _redisCache;
         private readonly string _password;
         private readonly string _userName;
-        private const string KeyServiceLayer = "SessionId_ServiceLayer";
+       
 
-        public HttpHelper(IHttpClientFactory clientFactory, IDistributedCache redisCache, IOptions<ServiceLayerOptions> options)
+        public HttpHelper(IHttpClientFactory clientFactory, IOptions<ServiceLayerOptions> options)
         {
             _clientFactory = clientFactory;
-            _redisCache = redisCache;
             _serviceLayerUrl = options.Value.ServiceLayerUrl;
             _companyDb = options.Value.CompanyDb;
             _userName = options.Value.UserName;
             _password = options.Value.Passwrod;
-
         }
 
         
@@ -111,15 +105,11 @@ namespace Dotnet.Onion.Template.Helpers.HttpClient
         {
 
             var sessionId = await SessionId();
-
             var client = _clientFactory.CreateClient("ServiceLayer");
-
             client.BaseAddress = new Uri(url);
             client.Timeout = timeout ?? TimeSpan.FromSeconds(30);
             client.DefaultRequestHeaders.Clear();
-
             var httpRequestMessage = new HttpRequestMessage(method, client.BaseAddress);
-
             if (headers != null)
             {
                 foreach (var item in headers)
@@ -127,48 +117,28 @@ namespace Dotnet.Onion.Template.Helpers.HttpClient
                     httpRequestMessage.Headers.Add(item.Key, item.Value);
                 }
             }
-
-            httpRequestMessage.Headers.Add(_cookie, sessionId);
+            httpRequestMessage.Headers.Clear();
+            httpRequestMessage.Headers.Add(_cookie, sessionId.SessionId);
             var serializedParameters = JsonConvert.SerializeObject(request);
             httpRequestMessage.Content = new StringContent(serializedParameters);
             httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            
             var response = await client.SendAsync(httpRequestMessage);
             return response;
         }
 
 
 
-        private async Task<string> SessionId()
+        private async Task<LoginResponse> SessionId()
         {
-            var sessionIdCache = await _redisCache.GetStringAsync(KeyServiceLayer);
-            
-            if (string.IsNullOrWhiteSpace(sessionIdCache))
-            {
-                var request = new LoginServiceLayer
-                {
-                    CompanyDB = _companyDb,
-                    Password = _password,
-                    UserName = _userName
-                };
+            var request = new LoginServiceLayer(_userName, _password, _companyDb);
+            var client = _clientFactory.CreateClient("ServiceLayer");
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, client.BaseAddress);
+            var serializedParameters = JsonConvert.SerializeObject(request);
+            httpRequestMessage.Content = new StringContent(serializedParameters);
+            var response = await client.PostAsync($"{_serviceLayerUrl}/Login", httpRequestMessage.Content);
+            var responseLogin = System.Text.Json.JsonSerializer.Deserialize<LoginResponse>(await response.Content.ReadAsStringAsync());
+            return responseLogin;
 
-                var client = _clientFactory.CreateClient("ServiceLayer");
-                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, client.BaseAddress);
-                var serializedParameters = JsonConvert.SerializeObject(request);
-                httpRequestMessage.Content = new StringContent(serializedParameters);
-                var response = await client.PostAsync($"{_serviceLayerUrl}/Login", httpRequestMessage.Content);
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var responseLogin = System.Text.Json.JsonSerializer.Deserialize<LoginResponse>(await response.Content.ReadAsStringAsync());
-                    var cacheSettings = new DistributedCacheEntryOptions();
-                    cacheSettings.SetAbsoluteExpiration(TimeSpan.FromMinutes(25));
-                    await _redisCache.SetStringAsync(KeyServiceLayer, responseLogin?.SessionId, cacheSettings);
-                    return responseLogin?.SessionId;
-                }
-            }
-
-            return await Task.FromResult(sessionIdCache);
         }
     }
 }

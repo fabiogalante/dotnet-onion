@@ -6,6 +6,7 @@ using Dotnet.Onion.Template.Helpers.HttpClient.Configuration;
 using Dotnet.Onion.Template.Helpers.HttpClient.Extensions;
 using Jaeger;
 using Jaeger.Samplers;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -85,9 +86,6 @@ namespace Dotnet.Onion.Template.API
 
             #endregion
 
-          
-
-
             #region Logging
 
             services.AddLogging(loggingBuilder =>
@@ -98,6 +96,17 @@ namespace Dotnet.Onion.Template.API
                 loggingBuilder.AddLog4Net();
             });
 
+            #endregion
+
+            #region MassTransit
+            services.AddMassTransit(bus =>
+            {
+                bus.UsingRabbitMq((ctx, busConfigurator) =>
+                {
+                    busConfigurator.Host(Configuration.GetConnectionString("RabbitMq"));
+                });
+            });
+            services.AddMassTransitHostedService();
             #endregion
         }
 

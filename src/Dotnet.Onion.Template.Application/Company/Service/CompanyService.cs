@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Dotnet.Onion.Template.Application.Company.Dto;
 using Dotnet.Onion.Template.Application.Company.Service.Interface;
+using Dotnet.Onion.Template.Domain.Company.Events;
 using Dotnet.Onion.Template.Domain.Company.Repository;
+using MassTransit;
 using OpenTracing;
 
 namespace Dotnet.Onion.Template.Application.Company.Service
@@ -25,12 +27,14 @@ namespace Dotnet.Onion.Template.Application.Company.Service
         private readonly ICompanyRepository _companyRepository;
         private readonly IMapper _mapper;
         private readonly ITracer _tracer;
-        
-        public CompanyService(IMapper mapper, ICompanyRepository companyRepository, ITracer tracer)
+        private readonly IPublishEndpoint _publisher;
+
+        public CompanyService(IMapper mapper, ICompanyRepository companyRepository, ITracer tracer, IPublishEndpoint publisher)
         {
             _mapper = mapper;
             _companyRepository = companyRepository;
             _tracer = tracer;
+            _publisher = publisher;
         }
 
         public async Task<CompanyOutPutDto> Create(CompanyInputDto dto)
@@ -41,7 +45,15 @@ namespace Dotnet.Onion.Template.Application.Company.Service
 
                 await _companyRepository.Save(company);
 
-                return this._mapper.Map<CompanyOutPutDto>(company);
+                await _publisher.Publish<ICompanyCreatedEvent>(new
+                {
+                    CompanyName = company.CompanyName,
+                    CompanyDb = company.CompanyDb,
+                    Active = company.Active,
+                    CreatedAt = company.CreatedAt
+                });
+
+                return _mapper.Map<CompanyOutPutDto>(company);
             }
         }
 

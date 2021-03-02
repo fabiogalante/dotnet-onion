@@ -19,8 +19,9 @@ namespace Dotnet.Onion.Template.Application.BusinessPartner.Query
 
         public async Task<GetBusinnesPartnerCommandResponse> Handle(GetBusinnesPartnerQueryCommand request, CancellationToken cancellationToken)
         {
-            var businessPartners = await _businessPartnersService.GetBusinessPartners(request.CardCode);
-            return _mapper.Map<GetBusinnesPartnerCommandResponse>(businessPartners);
+            var result = await _businessPartnersService.GetBusinessPartners(request.CardCode);
+            return new GetBusinnesPartnerCommandResponse(result);
+
         }
     }
 }
