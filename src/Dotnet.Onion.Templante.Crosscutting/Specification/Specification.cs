@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Dotnet.Onion.Templante.Crosscutting.Specification
+namespace Dotnet.Onion.Template.Crosscutting.Specification
 {
     public class Specification<T> : ISpecification<T>
     {
@@ -43,7 +43,7 @@ namespace Dotnet.Onion.Templante.Crosscutting.Specification
 
         public static ISpecification<T> CreateSpecification(Expression<Func<T, bool>> expression)
         {
-            return new Specification.Specification<T>(expression);
+            return new Specification<T>(expression);
         }
 
     }

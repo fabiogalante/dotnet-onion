@@ -4,7 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Dotnet.Onion.Templante.Crosscutting.Entity;
-using Dotnet.Onion.Templante.Crosscutting.Specification;
+using Dotnet.Onion.Template.Crosscutting.Entity;
+using Dotnet.Onion.Template.Crosscutting.Specification;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 

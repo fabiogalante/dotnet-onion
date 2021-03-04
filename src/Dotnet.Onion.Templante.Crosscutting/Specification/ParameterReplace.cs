@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Dotnet.Onion.Templante.Crosscutting.Specification
+namespace Dotnet.Onion.Template.Crosscutting.Specification
 {
     internal class ParameterReplacer : ExpressionVisitor
     {

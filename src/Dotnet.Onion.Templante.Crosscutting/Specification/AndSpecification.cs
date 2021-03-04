@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Dotnet.Onion.Templante.Crosscutting.Specification
+namespace Dotnet.Onion.Template.Crosscutting.Specification
 {
     public class AndSpecification<T> : Specification<T>, ISpecification<T>
     {

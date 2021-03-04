@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Dotnet.Onion.Templante.Crosscutting.Specification
+namespace Dotnet.Onion.Template.Crosscutting.Specification
 {
     public interface ISpecification<T>
     {

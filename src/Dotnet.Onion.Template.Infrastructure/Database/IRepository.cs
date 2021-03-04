@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Dotnet.Onion.Templante.Crosscutting.Specification;
+using Dotnet.Onion.Template.Crosscutting.Specification;
 using Microsoft.EntityFrameworkCore.Storage;
 
 /*
