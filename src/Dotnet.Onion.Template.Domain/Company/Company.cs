@@ -1,5 +1,4 @@
 ﻿using System;
-using Dotnet.Onion.Templante.Crosscutting.Entity;
 using Dotnet.Onion.Template.Crosscutting.Entity;
 
 namespace Dotnet.Onion.Template.Domain.Company

@@ -1,4 +1,4 @@
-﻿namespace Dotnet.Onion.Templante.Crosscutting.Entity
+﻿namespace Dotnet.Onion.Template.Crosscutting.Entity
 {
     public abstract class Entity<T>
     {
